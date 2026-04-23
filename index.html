@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Cumpleaños</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Inter', sans-serif;
+  color:white;
+  overflow:hidden;
+
+  background: linear-gradient(-45deg,#1e3a8a,#2563eb,#38bdf8,#7dd3fc);
+  background-size:400% 400%;
+  animation:gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* 🎈 globos aesthetic */
+.balloon{
+  position:fixed;
+  bottom:-120px;
+  width:55px;
+  height:70px;
+  border-radius:50% 50% 45% 45%;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.4),
+    rgba(147,197,253,0.25),
+    rgba(59,130,246,0.2)
+  );
+
+  backdrop-filter: blur(6px);
+  border:1px solid rgba(255,255,255,0.4);
+
+  box-shadow:
+    inset -10px -20px 40px rgba(255,255,255,0.4),
+    inset 10px 10px 20px rgba(255,255,255,0.15),
+    0 10px 30px rgba(0,0,0,0.2),
+    0 0 12px rgba(147,197,253,0.4);
+
+  animation:floatUp linear infinite;
+}
+
+/* cuerdita */
+.balloon::after{
+  content:"";
+  position:absolute;
+  width:2px;
+  height:35px;
+  background:rgba(255,255,255,0.4);
+  bottom:-35px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* 💙 corazones aesthetic */
+.heart{
+  position:fixed;
+  bottom:-80px;
+  font-size:34px;
+  opacity:0.9;
+
+  filter: drop-shadow(0 0 6px rgba(147,197,253,0.8));
+
+  animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+  0%{transform:translateY(0) translateX(0);}
+  50%{transform:translateY(-60vh) translateX(20px);}
+  100%{transform:translateY(-120vh) translateX(-20px);}
+}
+
+/* contenedor */
+.container{
+  position:relative;
+  z-index:2;
+  max-width:650px;
+  text-align:center;
+  padding:20px;
+}
+
+.top{
+  letter-spacing:3px;
+  font-size:13px;
+  opacity:0.8;
+}
+
+.title{
+  font-family:'Great Vibes', cursive;
+  font-size:75px;
+  font-weight:400;
+  margin:0;
+}
+
+.text{
+  margin-top:15px;
+  font-size:18px;
+  line-height:1.5;
+  font-family:'Playfair Display', serif;
+}
+
+/* botón aesthetic */
+.btn{
+  margin-top:25px;
+  padding:14px 28px;
+  border-radius:999px;
+
+  background: rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.6);
+
+  color:white;
+  font-size:18px;
+  font-weight:500;
+
+  backdrop-filter: blur(8px);
+
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn:hover{
+  background: rgba(255,255,255,0.35);
+}
+
+.btn:active{
+  transform:scale(0.95);
+  background:white;
+  color:#2563eb;
+}
+
+/* mensaje */
+#msg{
+  margin-top:25px;
+  font-size:18px;
+  font-style:italic;
+  opacity:0;
+  transition:1s;
+}
+
+/* opciones */
+.options{
+  margin-top:20px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.options button{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.1);
+  color:white;
+  font-size:12px;
+  font-weight:600;
+}
+
+#giftMsg{
+  margin-top:12px;
+  font-size:14px;
+  font-style:italic;
+}
+
+#imgBox img{
+  margin-top:12px;
+  width:160px;
+  border-radius:16px;
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="musica" loop>
+  <source src="musica mp3/musica.mp3.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+
+  <div class="top">PARA TI</div>
+
+  <h1 class="title">Feliz cumpleaños mi zorrito</h1>
+
+  <div class="text">
+    Deseo que tengas un bonito día,<br>
+    lleno de muuucha comiditaa<br>
+    y todo aquello que te haga feliz 💙
+  </div>
+
+  <button class="btn" onclick="start()">Abrir</button>
+
+  <div id="msg"></div>
+
+  <div class="options">
+    <button onclick="gift('a')">OPCIÓN 1</button>
+    <button onclick="gift('b')">OPCIÓN 2</button>
+    <button onclick="gift('c')">OPCIÓN 3</button>
+    <button onclick="gift('d')">OPCIÓN 4</button>
+  </div>
+
+  <div id="giftMsg"></div>
+  <div id="imgBox"></div>
+
+</div>
+
+<script>
+
+/* 🎈 efectos finales */
+function createEffects(){
+
+  setInterval(()=>{
+    const b=document.createElement("div");
+    b.className="balloon";
+
+    b.style.left=Math.random()*100+"vw";
+    b.style.animationDuration=(6+Math.random()*4)+"s";
+    b.style.transform=`scale(${0.7 + Math.random()*0.3})`;
+
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(),10000);
+  },700);
+
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💙";
+
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDuration=(5+Math.random()*3)+"s";
+
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),9000);
+  },900);
+}
+
+/* abrir */
+function start(){
+  const msg = document.getElementById("msg");
+
+  msg.innerHTML = "Espero que la pases bien hoy, noo suelo ser muy expresiva con lo que siento, pero quiero que sepas que eres alguien muy especial para mí, tal vez no sea exactamente la persona que esperas o no cumpla con todas tus expectativas, pero de alguna forma tú significas mucho para mí. Me gusta todo de ti, desde el dulce tono de tu voz hasta la forma linda con la que miras. Te amo mucho" ;
+
+  msg.style.opacity = "1";
+
+  document.getElementById("musica").play().catch(()=>{});
+
+  createEffects();
+}
+
+/* regalos */
+function gift(type){
+
+  let msg="";
+  let img="";
+
+  if(type==="a"){
+    msg="una salida juntos, sin prisa 💙";
+  }
+
+  if(type==="b"){
+    msg="una sorpresa que recibirás el 10 de mayo ✨";
+  }
+
+  if(type==="c"){
+    msg="una salida al cine el 28 de mayo, todo pagado 🎬";
+  }
+
+  if(type==="d"){
+    msg="todo… porque me gusta estar siempre contigooo";
+  }
+
+  document.getElementById("giftMsg").innerHTML = msg;
+  document.getElementById("imgBox").innerHTML = `<img src="${img}">`;
+}
+
+</script>
+
+</body>
+</html>
